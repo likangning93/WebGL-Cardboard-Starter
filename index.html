@@ -7,7 +7,7 @@
     <style>
       html, body {
         margin: 0px;
-        width: 1280px;
+        width: 640px;
         height: 1024px;
         margin: 0 auto;
         overflow: hidden;
@@ -16,7 +16,7 @@
     </style>
   </head>
   <body>
-    <div id="top" style="height: 320px"></div>
+    <div id="top" style="height: 480px"></div>
     <div id="canvas"></div>
 
     <script src="./js/three.min.js"></script>
@@ -255,8 +255,8 @@
       }
 
       function resize() {
-        var width = 1280;//container.offsetWidth;
-        var height = 720;//container.offsetHeight;
+        var width = 640;//container.offsetWidth;
+        var height = 360;//container.offsetHeight;
 
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
