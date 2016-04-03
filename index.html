@@ -294,7 +294,7 @@
           //console.log(dir);
           var dirXZ = new THREE.Vector3(dir.z, 0.0, dir.x);
 
-          camera.lookAt(dir + camera.position);
+          //camera.lookAt(dir + camera.position);
           dirXZ.normalize();
 
           //console.log(camera.position);
@@ -302,9 +302,9 @@
           //console.log(" ");
 
           //camera.position.add(dirXZ);
-          camera.position.x -= dirXZ.z * 500.0 * dt; // no idea why, but world point isn't the same as cam point?
-          camera.position.z -= dirXZ.x * 500.0 * dt;
-          camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
+          //camera.position.x -= dirXZ.z * 500.0 * dt; // no idea why, but world point isn't the same as cam point?
+          //camera.position.z -= dirXZ.x * 500.0 * dt;
+          //camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
         }
         //object = scene.children[ 0 ];
 
