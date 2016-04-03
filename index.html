@@ -84,6 +84,7 @@
           effect,
           controls,
           clock,
+          cameraMove = true,
 
           // Particles
           particles = new THREE.Object3D(),
@@ -97,6 +98,19 @@
       var object;
 
       init();
+
+      function heightField(x, y) {
+        // scaled bidirectional sine function
+        return Math.sin(x / 50.0) * Math.sin(y / 50.0) * 20.0;
+      }
+
+      function moveCamera() {
+        cameraMove = true;
+      }
+
+      function stopCamera() {
+        cameraMove = false;
+      }
 
       function init() {
         scene = new THREE.Scene();
@@ -115,6 +129,7 @@
 
         // Our initial control fallback with mouse/touch events in case DeviceOrientation is not enabled
         controls = new THREE.OrbitControls(camera, element);
+        camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
         controls.target.set(
           camera.position.x + 0.15, // orbit cam about a point a little bit displaced from cam pos
           camera.position.y,
@@ -134,15 +149,14 @@
           controls.connect();
           controls.update();
 
-          //element.addEventListener('click', fullscreen, false); // can we change to move?
+          element.addEventListener('mousedown', moveCamera, false);
+          element.addEventListener('mouseup', stopCamera, false);
 
           // for some reason, setting up DeviceOrientationControls means you can remove listener
           window.removeEventListener('deviceorientation', setOrientationControls, true);
         }
 
         window.addEventListener('deviceorientation', setOrientationControls, true);
-
-
 
 
         /********** make rolling hill-type things **********/
@@ -154,10 +168,10 @@
         var res = 40.0;
         var resi = 40;
 
-        var x = -100.0;
-        var z = 100.0;
-        var dx = 200.0 / res;
-        var dz = 200.0 / res;
+        var x = -200.0;
+        var z = 200.0;
+        var dx = 400.0 / res;
+        var dz = 400.0 / res;
         for (var i = 0; i < resi + 1; i++) {
           for (var j = 0; j < resi + 1; j++) {
             vertexPositions.push([x + j * dx, 1.0, z - i * dz]);
@@ -190,7 +204,7 @@
         for ( var i = 0; i < vertexPositions.length; i++ )
         {
           positions[ i*3 + 0 ] = vertexPositions[i][0];
-          positions[ i*3 + 1 ] = vertexPositions[i][1];
+          positions[ i*3 + 1 ] = heightField(vertexPositions[i][0], vertexPositions[i][2]);//vertexPositions[i][1];
           positions[ i*3 + 2 ] = vertexPositions[i][2];
 
           colors[ i*4 + 0 ] = Math.random();
@@ -275,6 +289,23 @@
       function render(dt) {
         var time = performance.now();
 
+        if (cameraMove) {
+          var dir = camera.getWorldDirection();
+          //console.log(dir);
+          var dirXZ = new THREE.Vector3(dir.z * 10.0, 0.0, dir.x * 10.0);
+
+          camera.lookAt(dirXZ + camera.position);
+          dirXZ.normalize();
+
+          //console.log(camera.position);
+          //console.log(dirXZ);
+          //console.log(" ");
+
+          //camera.position.add(dirXZ);
+          camera.position.x -= dirXZ.z * 500.0 * dt; // no idea why, but world point isn't the same as cam point?
+          camera.position.z -= dirXZ.x * 500.0 * dt;
+          camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
+        }
         //object = scene.children[ 0 ];
 
         object.material.uniforms.time.value = time * 0.005;
