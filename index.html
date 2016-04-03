@@ -149,8 +149,9 @@
           controls.connect();
           controls.update();
 
-          element.addEventListener('mousedown', moveCamera, false);
-          element.addEventListener('mouseup', stopCamera, false);
+          //element.addEventListener('mousedown', moveCamera, false);
+          //element.addEventListener('mouseup', stopCamera, false);
+          element.addEventListener('click', moveCamera, false);
 
           // for some reason, setting up DeviceOrientationControls means you can remove listener
           window.removeEventListener('deviceorientation', setOrientationControls, true);
@@ -311,6 +312,14 @@
 
 
         effect.render(scene, camera);
+      }
+
+      function moveCamera() {
+        var dir = camera.getWorldDirection();
+        var dirScale = new THREE.Vector3(dir.x * 10.0, dir.y * 10.0, dir.z * 10.0);
+        camera.translateZ(-5.0);
+        camera.lookAt(dir + camera.position);
+        camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
       }
 
     </script>
