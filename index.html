@@ -354,6 +354,8 @@
         groundObject.material.uniforms.lightDir.value = lightDirection;
         gl.clearColor(skyColor[0], skyColor[1], skyColor[2], skyColor[3]);
 
+        grassObject.material.uniforms.ambTerm.value = ambient * 0.5;
+        grassObject.material.uniforms.lightDir.value = lightDirection;     
 
         requestAnimationFrame(animate);
 
@@ -518,7 +520,7 @@
             time: { type: "f", value: 0.0 }, // kinda unused atm. whatev.
             ambTerm: { type: "f", value: 0.5 },            
             lightDir: {type: "3fv", value: [1.0, 0.1, 0.0]},
-            baseColor: {type: "3fv", value: [0.2, 0.5, 0.1]}
+            baseColor: {type: "3fv", value: [0.3, 0.4, 0.0]}
           },
           vertexShader: document.getElementById( 'groundVertexShader' ).textContent,
           fragmentShader: document.getElementById( 'groundFragmentShader' ).textContent,
