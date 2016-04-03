@@ -307,9 +307,9 @@
 
       function moveCamera(dt) {
         var dir = camera.getWorldDirection();
-        var dirScale = new THREE.Vector3(dir.x * 10.0, dir.y * 10.0, dir.z * 10.0);
+        var dirScale = new THREE.Vector3(dir.x * 100.0, dir.y * 100.0, dir.z * 100.0);
         camera.translateZ(500.0 * dt);
-        camera.lookAt(dir + camera.position);
+        //camera.lookAt(dir + camera.position);
         camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
       }
 
