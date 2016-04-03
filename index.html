@@ -51,6 +51,8 @@
 
     </script>
 
+
+
     <script id="fragmentShader" type="x-shader/x-fragment">
 
       precision mediump float;
@@ -64,7 +66,7 @@
       void main() {
 
         vec4 color = vec4( vColor );
-        color.r += sin( 10.0 + time ) * 0.5;
+        //color.r += sin( 10.0 + time ) * 0.5;
 
         gl_FragColor = color;
 
@@ -140,67 +142,44 @@
 
         window.addEventListener('deviceorientation', setOrientationControls, true);
 
-        // Lighting
-        var light = new THREE.PointLight(0x999999, 2, 100);
-        light.position.set(50, 50, 50);
-        scene.add(light);
 
-        var lightScene = new THREE.PointLight(0x999999, 2, 100);
-        lightScene.position.set(0, 5, 0);
-        scene.add(lightScene);
 
-/*
-        // make the floor material
-        var floorTexture = THREE.ImageUtils.loadTexture('textures/wood.jpg');
-        floorTexture.wrapS = THREE.RepeatWrapping;
-        floorTexture.wrapT = THREE.RepeatWrapping;
-        floorTexture.repeat = new THREE.Vector2(50, 50); */
 
-        var floorMaterial = new THREE.MeshPhongMaterial({
-          color: 0xdddddd,
-          specular: 0xdddddd,
-          shininess: 20,
-          shading: THREE.FlatShading,
-        });
-
-        // make the floor geometry
-        var geometry = new THREE.PlaneBufferGeometry(1000, 1000);
-
-        var floor = new THREE.Mesh(geometry, floorMaterial);
-        floor.rotation.x = -Math.PI / 2; // three planes get placed like walls, so rotate! :P
-        //scene.add(floor);
-
-/*
-        // setup particle textures
-        var particleTexture = THREE.ImageUtils.loadTexture('textures/particle.png');
-        var spriteMaterial = new THREE.SpriteMaterial({
-            map: particleTexture,
-            color: 0xffffff
-          });
-
-        // generate sprites using the sprite MTL. three js handles this all for us!
-        for (var i = 0; i < totalParticles; i++) {
-          var sprite = new THREE.Sprite(spriteMaterial);
-
-          sprite.scale.set(64, 64, 1.0);
-          sprite.position.set(Math.random() - 0.5, Math.abs(Math.random()), Math.random() - 0.75);
-          sprite.position.setLength(maxParticleSize * Math.random());
-
-          sprite.material.blending = THREE.AdditiveBlending;
-          
-          particles.add(sprite);
-        }
-        particles.position.y = 70;
-        scene.add(particles); */
-
-        // example square using indices
+        /********** make rolling hill-type things **********/
+        // http://gamedev.stackexchange.com/questions/78014/how-to-create-a-regular-grid-of-triangles-correctly
+        // generate a 40 x 40 grid from -100 to 100 in x and z
+        // so, essentially, 101 * 101 positions (thassalottapositions!)
         var geometry = new THREE.BufferGeometry();
-        var vertexPositions = [
-          [ 100.0, 5.0,-100.0],
-          [-100.0, 5.0,-100.0],
-          [-100.0, 5.0, 100.0],        
-          [ 100.0, 5.0, 100.0]
-        ];
+        var vertexPositions = [];
+        var res = 40.0;
+        var resi = 40;
+
+        var x = -100.0;
+        var z = 100.0;
+        var dx = 200.0 / res;
+        var dz = 200.0 / res;
+        for (var i = 0; i < resi + 1; i++) {
+          for (var j = 0; j < resi + 1; j++) {
+            vertexPositions.push([x + j * dx, 1.0, z - i * dz]);
+          }
+        }
+
+        // a 40 x 40 grid with 2 triangles per square
+        var indices = new Uint32Array(resi * resi * 6);
+        var index = 0;
+        for (var j = 0; j < resi; j++) {
+          for (var i = 0; i < resi; i++) {
+            indices[index + 0] = 0 + i + j * (resi + 1)
+            indices[index + 1] = resi + 1 + i + j * (resi + 1)
+            indices[index + 2] = resi + 2 + i + j * (resi + 1)
+
+            indices[index + 3] = 0 + i + j * (resi + 1)
+            indices[index + 4] = resi + 2 + i + j * (resi + 1)
+            indices[index + 5] = 1 + i + j * (resi + 1)
+            index += 6;
+          }
+        }
+
 
         var positions = new Float32Array( vertexPositions.length * 3 );
         var colors = new Float32Array( vertexPositions.length * 4 );
@@ -214,25 +193,16 @@
           positions[ i*3 + 1 ] = vertexPositions[i][1];
           positions[ i*3 + 2 ] = vertexPositions[i][2];
 
-          colors[ i*3 + 0 ] = 1.0;
-          colors[ i*3 + 1 ] = 1.0;
-          colors[ i*3 + 2 ] = 1.0;
-          colors[ i*3 + 3 ] = 1.0;
+          colors[ i*4 + 0 ] = Math.random();
+          colors[ i*4 + 1 ] = Math.random();
+          colors[ i*4 + 2 ] = Math.random();
+          colors[ i*4 + 3 ] = 1.0;
 
 
           //normals[ i*3 + 0 ] = 0.0;
           //normals[ i*3 + 1 ] = 1.0;
           //normals[ i*3 + 2 ] = 0.0;
         }
-
-        // can also do var indices = new Uint32Array(size);
-        var indices = new Uint32Array(6);
-        indices[0] = 0;
-        indices[1] = 1;
-        indices[2] = 2;
-        indices[3] = 0;
-        indices[4] = 2;
-        indices[5] = 3;
 
         geometry.setIndex( new THREE.BufferAttribute( indices, 1 ) );
         geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
@@ -312,6 +282,7 @@
 
         effect.render(scene, camera);
       }
+
     </script>
   </body>
 </html>
