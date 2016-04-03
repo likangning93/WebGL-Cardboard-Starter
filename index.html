@@ -104,16 +104,16 @@
         return Math.sin(x / 50.0) * Math.sin(y / 50.0) * 20.0;
       }
 
-      function startMoveCamera() {
-        element.preventDefault(); // necessary for android touch event handling or something?
+      function startMoveCamera(evt) {
+        evt.preventDefault(); // necessary for android touch event handling or something?
         cameraMove = true;
       }
 
-      function dragMoveCamera() {
-        element.preventDefault();        
+      function dragMoveCamera(evt) {
+        evt.preventDefault();        
       }
 
-      function stopMoveCamera() {
+      function stopMoveCamera(evt) {
         cameraMove = false;
       }
 
