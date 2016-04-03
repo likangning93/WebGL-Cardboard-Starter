@@ -1,6 +1,6 @@
 TODO:
 -read through the rest of the tutorial
--get to custom shaders. understand how to load geometry
+-get to custom shaders. understand how to load geometry -> https://raw.githubusercontent.com/mrdoob/three.js/master/examples/webgl_buffergeometry_rawshader.html
 -vert shader goal: see if we can get to basic shader animation with lots and lots of triangles
 -frag shader goal: lambert shading with time varying ambient
 -camera moves with click // http://stackoverflow.com/questions/18584389/listen-to-mouse-hold-event-on-website

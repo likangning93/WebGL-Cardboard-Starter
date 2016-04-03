@@ -103,14 +103,17 @@
       precision mediump int;
 
       uniform float time;
+      uniform float ambTerm;
+      uniform vec3 lightDir; // normal direction to the sun from every point
 
       varying vec3 vPosition;
       varying vec3 vNormal;
 
       void main() {
-        vec3 nor = vNormal / length(vNormal);
-        gl_FragColor =  vec4(abs(nor.x), abs(nor.y), abs(nor.z), 1.0);//vec4(0.05, 0.1, 0.0, 1.0);
-
+        vec3 nor = normalize(vNormal);
+        vec3 ldir = normalize(lightDir);
+        float lambTerm = dot(lightDir, nor);
+        gl_FragColor = vec4((lambTerm + ambTerm) * vec3(0.2, 0.5, 0.1), 1.0);
       }
 
     </script>
@@ -127,15 +130,13 @@
           controls,
           clock,
           cameraMove,
+          elapsedTime = 0.0,
 
-          // Particles
-          particles = new THREE.Object3D(),
-          totalParticles = 20,
-          maxParticleSize = 200,
-          particleRotationSpeed = 0,
-          particleRotationDeg = 0,
-          lastColorRange = [0, 0.3],
-          currentColorRange = [0, 0.3];
+          // animated lighting elements
+          skyColor = [0.7, 0.7, 1.0, 1.0],
+          lightDirection = [1.0, 0.1, 0.0],
+          ambient = 0.5;
+
 
       var object;
 
@@ -146,18 +147,6 @@
         return Math.sin(x / 50.0) * Math.sin(y / 50.0) * 20.0;
       }
 
-      //function startMoveCamera(evt) {
-      //  evt.preventDefault(); // necessary for android touch event handling or something?
-      //  cameraMove = true;
-      //}
-//
-      //function dragMoveCamera(evt) {
-      //  evt.preventDefault();        
-      //}
-//
-      //function stopMoveCamera(evt) {
-      //  cameraMove = false;
-      //}
       function toggleCameraTranslation(evt) {
         cameraMove = !cameraMove;
       }
@@ -171,7 +160,7 @@
 
         renderer = new THREE.WebGLRenderer();
         gl = renderer.context;
-        gl.clearColor(0.7, 0.7, 1.0, 1.0);
+        gl.clearColor(0.7, 0.7, 1.0, 1.0); // set clear color -> no idea where clearing actually happens
         element = renderer.domElement;
         container = document.getElementById('canvas');
         container.appendChild(element);
@@ -329,7 +318,9 @@
         var groundMaterial = new THREE.RawShaderMaterial( {
 
           uniforms: {
-            time: { type: "f", value: 1.0 }
+            time: { type: "f", value: 0.0 }, // kinda unused atm. whatev.
+            ambTerm: { type: "f", value: 0.5 },            
+            lightDir: {type: "3fv", value: [1.0, 0.1, 0.0]}
           },
           vertexShader: document.getElementById( 'groundVertexShader' ).textContent,
           fragmentShader: document.getElementById( 'groundFragmentShader' ).textContent,
@@ -350,20 +341,13 @@
       }
 
       function animate() {
-        var elapsedSeconds = clock.getElapsedTime(),
-            particleRotationDirection = particleRotationDeg <= 180 ? -1 : 1;
+        var elapsedSeconds = clock.getElapsedTime();
 
-        particles.rotation.y = elapsedSeconds * particleRotationSpeed * particleRotationDirection;
-        
-        // We check if the color range has changed, if so, we'll change the colours
-        if (lastColorRange[0] != currentColorRange[0] && lastColorRange[1] != currentColorRange[1]) {
 
-          for (var i = 0; i < totalParticles; i++) {
-            particles.children[i].material.color.setHSL(currentColorRange[0], currentColorRange[1], (Math.random() * (0.7 - 0.2) + 0.2));
-          }
+        object.material.uniforms.ambTerm.value = ambient;
+        object.material.uniforms.lightDir.value = lightDirection;
+        gl.clearColor(skyColor[0], skyColor[1], skyColor[2], skyColor[3]);
 
-          lastColorRange = currentColorRange;
-        }
 
         requestAnimationFrame(animate);
 
