@@ -289,7 +289,7 @@
       function render(dt) {
         var time = performance.now();
 
-        if (cameraMove) {
+        //if (cameraMove) {
           var dir = camera.getWorldDirection();
           //console.log(dir);
           var dirXZ = new THREE.Vector3(dir.z * 10.0, 0.0, dir.x * 10.0);
@@ -304,7 +304,7 @@
           //camera.position.add(dirXZ);
           camera.translateZ(-400.0 * dt);
           camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
-        }
+        //}
         //object = scene.children[ 0 ];
 
         object.material.uniforms.time.value = time * 0.005;
