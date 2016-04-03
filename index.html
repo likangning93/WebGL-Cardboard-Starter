@@ -158,13 +158,11 @@
           controls.connect();
           controls.update();
 
-
-          
+          element.addEventListener('click', toggleCameraTranslation, false);
 
           // for some reason, setting up DeviceOrientationControls means you can remove listener
           window.removeEventListener('deviceorientation', setOrientationControls, true);
         }
-        element.addEventListener('click', toggleCameraTranslation, false);
         window.addEventListener('deviceorientation', setOrientationControls, true);
           //element.addEventListener('touchstart', startMoveCamera, false); // don't work yet
           //element.addEventListener('touchmove', dragMoveCamera, false);          
