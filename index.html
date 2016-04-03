@@ -292,9 +292,9 @@
         if (cameraMove) {
           var dir = camera.getWorldDirection();
           //console.log(dir);
-          var dirXZ = new THREE.Vector3(dir.z * 10.0, 0.0, dir.x * 10.0);
+          var dirXZ = new THREE.Vector3(dir.z, 0.0, dir.x);
 
-          camera.lookAt(dirXZ + camera.position);
+          camera.lookAt(dir + camera.position);
           dirXZ.normalize();
 
           //console.log(camera.position);
