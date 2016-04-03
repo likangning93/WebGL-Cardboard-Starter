@@ -84,7 +84,7 @@
           effect,
           controls,
           clock,
-          cameraMove = true,
+          cameraMove = false,
 
           // Particles
           particles = new THREE.Object3D(),
@@ -149,14 +149,14 @@
           controls.connect();
           controls.update();
 
-          //element.addEventListener('mousedown', moveCamera, false);
-          //element.addEventListener('mouseup', stopCamera, false);
+          element.addEventListener('mousedown', moveCamera, false);
+          element.addEventListener('mouseup', stopCamera, false);
           
 
           // for some reason, setting up DeviceOrientationControls means you can remove listener
           window.removeEventListener('deviceorientation', setOrientationControls, true);
         }
-element.addEventListener('click', moveCamera, false);
+        //element.addEventListener('click', moveCamera, false);
         window.addEventListener('deviceorientation', setOrientationControls, true);
 
 
@@ -290,34 +290,16 @@ element.addEventListener('click', moveCamera, false);
       function render(dt) {
         var time = performance.now();
 
-        //if (cameraMove) {
-          var dir = camera.getWorldDirection();
-          //console.log(dir);
-          var dirXZ = new THREE.Vector3(dir.z * 10.0, 0.0, dir.x * 10.0);
-
-          //camera.lookAt(dir + camera.position);
-          dirXZ.normalize();
-
-          //console.log(camera.position);
-          //console.log(dirXZ);
-          //console.log(" ");
-
-          //camera.position.add(dirXZ);
-          //camera.translateZ(-400.0 * dt);
-          //camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
-        //}
-        //object = scene.children[ 0 ];
-
         object.material.uniforms.time.value = time * 0.005;
-
+        if (cameraMove) moveCamera(dt);
 
         effect.render(scene, camera);
       }
 
-      function moveCamera() {
+      function moveCamera(dt) {
         var dir = camera.getWorldDirection();
         var dirScale = new THREE.Vector3(dir.x * 10.0, dir.y * 10.0, dir.z * 10.0);
-        camera.translateZ(5.0);
+        camera.translateZ(500.0 * dt);
         camera.lookAt(dir + camera.position);
         camera.position.y = heightField(camera.position.x, camera.position.z) + 7.0;
       }
