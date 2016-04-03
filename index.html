@@ -112,7 +112,7 @@
       void main() {
         vec3 nor = normalize(vNormal);
         vec3 ldir = normalize(lightDir);
-        float lambTerm = dot(lightDir, nor);
+        float lambTerm = clamp(dot(lightDir, nor), 0.05, 1.0);
         gl_FragColor = vec4((lambTerm + ambTerm) * vec3(0.2, 0.5, 0.1), 1.0);
       }
 
@@ -343,6 +343,14 @@
       function animate() {
         var elapsedSeconds = clock.getElapsedTime();
 
+
+        // update ambient, light direction, sky color
+        ambient = Math.max(0.05, Math.min(Math.sin(elapsedSeconds / 5.0), 0.3))
+        lightDirection = [Math.sin(elapsedSeconds / 5.0), Math.cos(elapsedSeconds / 5.0), 0.0];
+
+        skyColor[0] = Math.max(0.10, Math.min(Math.sin(elapsedSeconds / 5.0 + Math.PI / 2.0), 0.4))
+        skyColor[1] = Math.max(0.05, Math.min(Math.sin(elapsedSeconds / 5.0 + Math.PI / 2.0), 0.6))
+        skyColor[2] = Math.max(0.15, Math.min(Math.sin(elapsedSeconds / 5.0 + Math.PI / 2.0), 0.8))
 
         object.material.uniforms.ambTerm.value = ambient;
         object.material.uniforms.lightDir.value = lightDirection;
