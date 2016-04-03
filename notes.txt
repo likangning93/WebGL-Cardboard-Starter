@@ -1,0 +1,26 @@
+TODO:
+-read through the rest of the tutorial
+-get to custom shaders. understand how to load geometry
+-vert shader goal: see if we can get to basic shader animation with lots and lots of triangles
+-frag shader goal: lambert shading with time varying ambient
+-camera moves with click // http://stackoverflow.com/questions/18584389/listen-to-mouse-hold-event-on-website
+
+-awesome if we can get three shader sets working:
+	-basic transform and lambert -> for building on
+	-grass
+	-sky
+
+
+RESOURCES, ART, NUMBERS, ETC.
+-https://answers.yahoo.com/question/index?qid=20080925182716AA9Nqgz
+-average 40,000 blades of grass per square foot, ~5 million blades in a 12x12 area
+-if we make it taller, what can we get away with? hopefully a lot less
+-let's try to get up to 1 million blades at once
+-each will be 5 triangles, two quads and a pointy thing at the top, 5 vertices
+-so 5 million triangles (!!)
+
+
+MECHANICS
+-HTML blawwwwwwwww
+-I'll deal with this later
+-http://lea.verou.me/2011/10/easily-keep-gh-pages-in-sync-with-master/
