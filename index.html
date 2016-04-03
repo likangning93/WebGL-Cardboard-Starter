@@ -105,7 +105,12 @@
       }
 
       function startMoveCamera() {
+        element.preventDefault(); // necessary for android touch event handling or something?
         cameraMove = true;
+      }
+
+      function dragMoveCamera() {
+        element.preventDefault();        
       }
 
       function stopMoveCamera() {
@@ -150,8 +155,7 @@
           controls.connect();
           controls.update();
 
-          element.addEventListener('touchstart', startMoveCamera, false);
-          element.addEventListener('touchend', stopMoveCamera, false);
+
           
 
           // for some reason, setting up DeviceOrientationControls means you can remove listener
@@ -159,7 +163,9 @@
         }
         //element.addEventListener('click', moveCamera, false);
         window.addEventListener('deviceorientation', setOrientationControls, true);
-
+          element.addEventListener('touchstart', startMoveCamera, false);
+          element.addEventListener('touchmove', dragMoveCamera, false);          
+          element.addEventListener('touchend', stopMoveCamera, false);
         /********** make rolling hill-type things **********/
         // http://gamedev.stackexchange.com/questions/78014/how-to-create-a-regular-grid-of-triangles-correctly
         // generate a 40 x 40 grid from -100 to 100 in x and z
