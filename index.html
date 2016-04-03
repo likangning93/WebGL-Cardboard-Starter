@@ -104,17 +104,20 @@
         return Math.sin(x / 50.0) * Math.sin(y / 50.0) * 20.0;
       }
 
-      function startMoveCamera(evt) {
-        evt.preventDefault(); // necessary for android touch event handling or something?
-        cameraMove = true;
-      }
-
-      function dragMoveCamera(evt) {
-        evt.preventDefault();        
-      }
-
-      function stopMoveCamera(evt) {
-        cameraMove = false;
+      //function startMoveCamera(evt) {
+      //  evt.preventDefault(); // necessary for android touch event handling or something?
+      //  cameraMove = true;
+      //}
+//
+      //function dragMoveCamera(evt) {
+      //  evt.preventDefault();        
+      //}
+//
+      //function stopMoveCamera(evt) {
+      //  cameraMove = false;
+      //}
+      function toggleCameraTranslation(evt) {
+        cameraMove = !cameraMove;
       }
 
       function init() {
@@ -161,11 +164,11 @@
           // for some reason, setting up DeviceOrientationControls means you can remove listener
           window.removeEventListener('deviceorientation', setOrientationControls, true);
         }
-        //element.addEventListener('click', moveCamera, false);
+        element.addEventListener('click', toggleCameraTranslation, false);
         window.addEventListener('deviceorientation', setOrientationControls, true);
-          element.addEventListener('touchstart', startMoveCamera, false);
-          element.addEventListener('touchmove', dragMoveCamera, false);          
-          element.addEventListener('touchend', stopMoveCamera, false);
+          //element.addEventListener('touchstart', startMoveCamera, false); // don't work yet
+          //element.addEventListener('touchmove', dragMoveCamera, false);          
+          //element.addEventListener('touchend', stopMoveCamera, false);
         /********** make rolling hill-type things **********/
         // http://gamedev.stackexchange.com/questions/78014/how-to-create-a-regular-grid-of-triangles-correctly
         // generate a 40 x 40 grid from -100 to 100 in x and z

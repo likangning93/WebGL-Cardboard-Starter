@@ -5,6 +5,9 @@ TODO:
 -frag shader goal: lambert shading with time varying ambient
 -camera moves with click // http://stackoverflow.com/questions/18584389/listen-to-mouse-hold-event-on-website
 
+-something is wrong with mouse holds:
+https://developer.mozilla.org/en-US/docs/Web/API/Touch_events
+
 -awesome if we can get three shader sets working:
 	-basic transform and lambert -> for building on
 	-grass
@@ -24,3 +27,35 @@ MECHANICS
 -HTML blawwwwwwwww
 -I'll deal with this later
 -http://lea.verou.me/2011/10/easily-keep-gh-pages-in-sync-with-master/
+
+
+        var geometry = new THREE.BufferGeometry();
+        var mapSize = 40;
+        var vertexPositions = [];
+        var indices = new Uint32Array(mapSize * mapSize * 6);
+
+        for (var x = 0; x < mapSize + 1 ; x++)
+        {
+            for (var y = 0; y < mapSize + 1 ; y++)
+            {
+                vertexPositions.push([x, 5.0, y]);
+            }
+        }
+
+        // a 40 x 40 grid with 2 triangles per square
+        var index = 0;
+        for (var x = 0; x < mapSize ; x++)
+        {
+            for (var y = 0; y < mapSize ; y++)
+            {
+                indices[index + 0] = ( x * (mapSize + 1) + y);
+                indices[index + 1] = (indices[index + 0] + mapSize + 1);
+                indices[index + 2] = (indices[index + 0] + mapSize + 2);
+
+                indices[index + 3] = (indices[index + 0]);
+                indices[index + 4] = (indices[index + 0] + 1);
+                indices[index + 5] = (indices[index + 0] + 2);
+
+                index += 6;
+            }
+        }
